@@ -125,7 +125,8 @@ namespace iotbit {
     let servo1Angle: number = 0xfff;
     let servo2Angle: number = 0xfff;
     let MESSAGE_HEAD = 0xff;
-     
+    let MESSAGE_ANGLE = 0xfe; 
+
     let fan_oriention = 0;
     let fan_speed = 0;
 
@@ -480,12 +481,6 @@ namespace iotbit {
                 pins.setPull(DigitalPin.P16, PinPullMode.PullUp);
                 status = !pins.digitalReadPin(DigitalPin.P16);
                 break;
-            case touchKeyPort.port6:
-                status = !PA6;
-                break;
-            case touchKeyPort.port8:
-                status = !PB0;
-                break;
         }
         return status;
     }
@@ -540,7 +535,7 @@ namespace iotbit {
         if (!lhRGBLight) {
             lhRGBLight = IOTRGBLight.create(DigitalPin.P15, 6, IOTRGBPixelMode.RGB);
         }
-        qdee_clearLight();
+        iotbit_clearLight();
     }
 
     /**
