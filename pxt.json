@@ -1,0 +1,21 @@
+{
+    "name": "IOTbit",
+    "version": "0.0.1",
+    "description": "Blocks for Lobot IOTbit",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*"
+    },
+    "files": [
+        "README.md",
+        "main.ts",
+        "IOTRGBLight.ts",
+        "sendbuffer.asm",
+        "_locales/zh/iotbit-strings.json",
+        "_locales/zh/iotbit-jsdoc-strings.json"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "public": true
+}
