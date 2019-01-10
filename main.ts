@@ -33,26 +33,11 @@ namespace iotbit {
      
 
     export enum busServoPort {
-        //% block="Port 10"
-        port10 = 0x0A
+        //% block="Port 6"
+        port6 = 0x06
+
     }
      
-    export enum extPort {
-        //% block="Port 1"
-        port1 = 0x01,
-        //% block="Port 2"
-        port2 = 0x02,
-        //% block="Port 3"
-        port3 = 0x03,
-        //% block="Port 4"
-        port4 = 0x04,
-        //% block="Port 6"
-        port6 = 0x06,
-        //% block="Port 8"
-        port8 = 0x08,
-        //% block="Port 9"
-        port9 = 0x09
-    }
 
     export enum touchKeyPort {
         //% block="Port 1"
@@ -60,11 +45,7 @@ namespace iotbit {
         //% block="Port 2"
         port2 = 0x02,
         //% block="Port 3"
-        port3 = 0x03,
-        //% block="Port 6"
-        port6 = 0x06,
-        //% block="Port 8"
-        port8 = 0x08
+        port3 = 0x03
     }
 
     export enum IOTCmdType {
@@ -130,6 +111,10 @@ namespace iotbit {
     let fan_oriention = 0;
     let fan_speed = 0;
 
+    let P14_ad = 0;
+
+
+
     /**
     * Get the handle command.
     */
@@ -143,14 +128,34 @@ namespace iotbit {
         let index = findIndexof(handleCmd, "$", 0);
         if (index != -1) {
             let cmd: string = handleCmd.substr(0, index);
-            if (cmd.charAt(0).compare("A") == 0 && cmd.length == 9) {
-                let arg1Int: number = strToNumber(cmd.substr(1, 2));
-                let arg2Int: number = strToNumber(cmd.substr(3, 2));
-                let arg3Int: number = strToNumber(cmd.substr(5, 2));
-                let arg4Int: number = strToNumber(cmd.substr(7, 2));
- 
-                if (arg1Int != -1 && arg2Int != -1 && arg3Int != -1 && arg4Int != -1)
-                    iotbit_setPixelRGBSerial(arg1Int, arg2Int, arg3Int, arg4Int);
+            if (cmd.charAt(0).compare("A") == 0) {
+                if (cmd.length == 7)
+                {
+                    let arg1Int: number = strToNumber(cmd.substr(1, 2));
+                    let arg2Int: number = strToNumber(cmd.substr(3, 2));
+                    let arg3Int: number = strToNumber(cmd.substr(5, 2));
+                    P14_ad = arg1Int;
+
+                    if (arg3Int != -1) {
+                        currentVoltage = arg3Int * 10353 / 400;
+                        currentVoltage = Math.round(currentVoltage);
+                    }
+
+                    if (arg2Int != -1) {
+                        volume = arg2Int;
+                    }
+                }
+                else if (cmd.length == 9)
+                {
+                    let arg1Int: number = strToNumber(cmd.substr(1, 2));
+                    let arg2Int: number = strToNumber(cmd.substr(3, 2));
+                    let arg3Int: number = strToNumber(cmd.substr(5, 2));
+                    let arg4Int: number = strToNumber(cmd.substr(7, 2));
+     
+                    if (arg1Int != -1 && arg2Int != -1 && arg3Int != -1 && arg4Int != -1)
+                        iotbit_setPixelRGBSerial(arg1Int, arg2Int, arg3Int, arg4Int);    
+                }
+
             }
             else if (cmd.charAt(0).compare("B") == 0 && cmd.length == 16) {
                 let arg1Int: number = strToNumber(cmd.substr(1, 1));
@@ -168,7 +173,7 @@ namespace iotbit {
                 let arg3Int: number = strToNumber(cmd.substr(5, 4));//时间
 
                 if (arg1Int != -1 && arg2Int != -1 && arg3Int != -1) {
-                    iotbit_setBusServo(busServoPort.port10, arg1Int, arg2Int, arg3Int);
+                    iotbit_setBusServo(busServoPort.port6, arg1Int, arg2Int, arg3Int);
                 }
             }
             else if (cmd.charAt(0).compare("D") == 0 && cmd.length == 5)//蜂鸣器
@@ -381,6 +386,31 @@ namespace iotbit {
             return 0xFFF;
     }
 
+
+    /**
+    * Set the angle of servo 1 to 8, range of 0~180 degree
+    */
+    //% weight=87 blockId=setServo block="Set pwm servo|index %index|angle(0~180) %angle|duration %duration"
+    //% angle.min=0 angle.max=180
+    export function setServo(index: number, angle: number, duration: number) {
+        if (angle > 180 || angle < 0) {
+            return;
+        }
+        let position = mapRGB(angle, 0, 180, 500, 2500);
+
+        let buf = pins.createBuffer(10);
+        buf[0] = 0x55;
+        buf[1] = 0x55;
+        buf[2] = 0x08;
+        buf[3] = 0x03;//cmd type
+        buf[4] = 0x01;
+        buf[5] = duration & 0xff;
+        buf[6] = (duration >> 8) & 0xff;
+        buf[7] = index;
+        buf[8] = position & 0xff;
+        buf[9] = (position >> 8) & 0xff;
+        serial.writeBuffer(buf);
+    }
     
     /**
     * Get the volume level detected by the sound sensor, range 0 to 255
@@ -478,8 +508,10 @@ namespace iotbit {
                 status = !pins.digitalReadPin(DigitalPin.P13);
                 break;
             case touchKeyPort.port3:
-                pins.setPull(DigitalPin.P16, PinPullMode.PullUp);
-                status = !pins.digitalReadPin(DigitalPin.P16);
+                if (P14_ad > 0xA)
+                    status = false;
+                else
+                    status = true;
                 break;
         }
         return status;
@@ -745,8 +777,8 @@ namespace iotbit {
     /**
      * Connect to the wifi
      */
-    //% weight=62 blockId=qdee_connectWifi block="Connect to the Wifi,name|%ssid|and password %passwrd"
-    export function qdee_connectWifi(ssid: string, passwrd: string) {
+    //% weight=62 blockId=iotbit_connectWifi block="Connect to the Wifi,name|%ssid|and password %passwrd"
+    export function iotbit_connectWifi(ssid: string, passwrd: string) {
         let buf = pins.createBuffer(ssid.length + passwrd.length + 10);
         buf[0] = 0x55;
         buf[1] = 0x55;
