@@ -1,5 +1,4 @@
-# IOTbit
-# IOTbit
+# iotbit
 
 Extension for Lobot IOTbit Microbot block
 
@@ -9,10 +8,10 @@ MIT
 
 ## Supported targets
 
-* for PXT/IOTbit
+* for PXT/iotbit
 (The metadata above is needed for package search.)
 
 ```package
-IOTbit=github:LOBOT-ROBOT/IOTbit
+iotbit=github:LOBOT-ROBOT/IOTbit
 ```
 
