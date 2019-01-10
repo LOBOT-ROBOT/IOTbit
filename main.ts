@@ -905,7 +905,7 @@ namespace iotbit {
      */
     //% weight=58 blockId="iotbit_gettemperature" block="IOTbit|port %port|get %select"
     export function iotbit_gettemperature(port: TempSensor, select: Temp_humi): number {
-        let pin;
+        let pin = DigitalPin.P2;
         switch (port)
         {
             case TempSensor.port1:
