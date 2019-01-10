@@ -20,7 +20,7 @@
 	"iotbit.iotbit_playTone|block":"IOTbit 播放|音调 %tone|节拍 %rhythm",
 	"iotbit.iotbit_connectWifi|block":"配置连接到Wifi,名称|%ssid|和密码 %passwrd",
 	"iotbit.iotbit_sendSensorData|block":"发送|%cmd|传感器数据 %data",    
-	"iotbit.iotbit_gettemperature|block":"IOTbit获取 %select",   
+	"iotbit.iotbit_gettemperature|block":"IOTbit|端口 %port|获取 %select",   
 	"fanPort.port1|block":"接口1",
 	"fanPort.port2|block":"接口2",
 	"Temp_humi.Temperature|block":"温度",
@@ -57,5 +57,8 @@
 	"IOTRGBColors.White|block":"白色",
 	"IOTLights.Light1|block":"彩灯灯1",
 	"IOTLights.Light2|block":"彩灯灯2",
-	"IOTLights.All|block":"全部"
+	"IOTLights.All|block":"全部",
+	"TempSensor.port1|block":"接口1",
+	"TempSensor.port2|block":"接口2",
+	"TempSensor.port3|block":"接口3"
 }

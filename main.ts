@@ -24,6 +24,15 @@ namespace iotbit {
         Humidity = 0x02
     }
 
+    export enum TempSensor {
+        //% block="Port 1"
+        port1 = 0x01,
+        //% block="Port 2"
+        port2 = 0x02,      
+        //% block="Port 3"
+        port3 = 0x03           
+    }
+
     export enum ultrasonicPort {
         //% block="Port 1"
         port1 = 0x01,
@@ -858,19 +867,65 @@ namespace iotbit {
         cmdStr += "$";
         serial.writeString(cmdStr);
     }
+
+    function signal_dht11(pin: DigitalPin): void {
+        pins.digitalWritePin(pin, 0)
+        basic.pause(18)
+        let i = pins.digitalReadPin(pin)
+        pins.setPull(pin, PinPullMode.PullUp);
+
+    }
+
+    function dht11_read(pin: DigitalPin): number {
+        signal_dht11(pin);
+
+        // Wait for response header to finish
+        while (pins.digitalReadPin(pin) == 1);
+        while (pins.digitalReadPin(pin) == 0);
+        while (pins.digitalReadPin(pin) == 1);
+
+        let value = 0;
+        let counter = 0;
+
+        for (let i = 0; i <= 32 - 1; i++) {
+            while (pins.digitalReadPin(pin) == 0);
+            counter = 0
+            while (pins.digitalReadPin(pin) == 1) {
+                counter += 1;
+            }
+            if (counter > 4) {
+                value = value + (1 << (31 - i));
+            }
+        }
+        return value;
+    }
      
     /**
      * Get sensor temperature and humidity
      */
-    //% weight=58 blockId="iotbit_gettemperature" block="IOTbit get %select"
-    export function iotbit_gettemperature(select: Temp_humi): number {
+    //% weight=58 blockId="iotbit_gettemperature" block="IOTbit|port %port|get %select"
+    export function iotbit_gettemperature(port: TempSensor, select: Temp_humi): number {
+        let pin;
+        switch (port)
+        {
+            case TempSensor.port1:
+                pin = DigitalPin.P2;
+                break;
+            
+            case TempSensor.port2:
+                pin = DigitalPin.P14;
+                break;
+            
+            case TempSensor.port3:
+                pin = DigitalPin.P16;
+                break;
+        }
+        let value = dht11_read(pin)
         if (select == Temp_humi.Temperature) {
-            let temp = 0;
-            return temp;
+            return (value & 0x0000ff00) >> 8;
         }
         else {
-            let humi = 0;
-            return humi;
+            return value >> 24
         }
     }
      
