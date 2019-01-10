@@ -565,7 +565,7 @@ namespace iotbit {
 	 */
     function iotbit_initRGBLight() {
         if (!lhRGBLight) {
-            lhRGBLight = IOTRGBLight.create(DigitalPin.P15, 6, IOTRGBPixelMode.RGB);
+            lhRGBLight = IOTRGBLight.create(DigitalPin.P15, 2, IOTRGBPixelMode.RGB);
         }
         iotbit_clearLight();
     }
