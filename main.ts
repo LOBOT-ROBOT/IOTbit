@@ -166,7 +166,7 @@ namespace iotbit {
                 }
 
             }
-            else if (cmd.charAt(0).compare("B") == 0 && cmd.length == 16) {
+            else if (cmd.charAt(0).compare("B") == 0 && cmd.length == 3) {
                 let arg1Int: number = strToNumber(cmd.substr(1, 1));
                 let arg2Int: number = strToNumber(cmd.substr(2, 2));
 
@@ -202,22 +202,26 @@ namespace iotbit {
             {
                 control.raiseEvent(MESSAGE_HEAD, IOTCmdType.TEMP);
             }
-            else if (cmd.charAt(0).compare("G") == 0 && cmd.length == 1)//查询光线
+            else if (cmd.charAt(0).compare("G") == 0 && cmd.length == 1)//查询湿度
+            {
+                control.raiseEvent(MESSAGE_HEAD, IOTCmdType.HUMI);
+            }
+            else if (cmd.charAt(0).compare("H") == 0 && cmd.length == 1)//查询光线
             {
                 control.raiseEvent(MESSAGE_HEAD, IOTCmdType.LIGHT);
             }
             //H触摸感应
-            else if (cmd.charAt(0).compare("I") == 0 && cmd.length == 1)//查询超声波
+            else if (cmd.charAt(0).compare("J") == 0 && cmd.length == 1)//查询超声波
             {
                 control.raiseEvent(MESSAGE_HEAD, IOTCmdType.ULTRASONIC);
             }
             //J震动情况发送
             //k按键情况发送
-            else if (cmd.charAt(0).compare("L") == 0 && cmd.length == 1)//查询方向
+            else if (cmd.charAt(0).compare("M") == 0 && cmd.length == 1)//查询方向
             {
                 control.raiseEvent(MESSAGE_HEAD, IOTCmdType.ULTRASONIC);
             }
-            else if (cmd.charAt(0).compare("M") == 0 && cmd.length == 1)//查询音量
+            else if (cmd.charAt(0).compare("N") == 0 && cmd.length == 1)//查询音量
             {
                 control.raiseEvent(MESSAGE_HEAD, IOTCmdType.SOUND);
             }
@@ -871,7 +875,8 @@ namespace iotbit {
     function signal_dht11(pin: DigitalPin): void {
         pins.digitalWritePin(pin, 0)
         basic.pause(18)
-        let i = pins.digitalReadPin(pin)
+        pins.digitalWritePin(pin, 1)
+        basic.pause(40)
         pins.setPull(pin, PinPullMode.PullUp);
 
     }
@@ -880,7 +885,6 @@ namespace iotbit {
         signal_dht11(pin);
 
         // Wait for response header to finish
-        while (pins.digitalReadPin(pin) == 1);
         while (pins.digitalReadPin(pin) == 0);
         while (pins.digitalReadPin(pin) == 1);
 
