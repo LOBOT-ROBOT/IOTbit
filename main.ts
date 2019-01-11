@@ -185,10 +185,10 @@ namespace iotbit {
                     iotbit_setBusServo(busServoPort.port6, arg1Int, arg2Int, arg3Int);
                 }
             }
-            else if (cmd.charAt(0).compare("D") == 0 && cmd.length == 5)//蜂鸣器
+            else if (cmd.charAt(0).compare("D") == 0 && cmd.length == 6)//蜂鸣器
             {
-                let arg1Int: number = strToNumber(cmd.substr(1, 2));
-                let arg2Int: number = strToNumber(cmd.substr(3, 2));
+                let arg1Int: number = strToNumber(cmd.substr(1, 4));
+                let arg2Int: number = strToNumber(cmd.substr(5, 1));
                 if (arg1Int != -1 && arg2Int != -1)
                     iotbit_playTone(arg1Int, arg2Int);
             }
