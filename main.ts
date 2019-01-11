@@ -796,7 +796,7 @@ namespace iotbit {
         buf[0] = 0x55;
         buf[1] = 0x55;
         buf[2] = (ssid.length + passwrd.length + 8) & 0xff;
-        buf[3] = 0x3E;//cmd type
+        buf[3] = 0x3F;//cmd type
         buf[4] = 0x6;
         buf[5] = 0x22;
         for (let i = 0; i < ssid.length; i++) {
@@ -869,7 +869,17 @@ namespace iotbit {
         }
         cmdStr += data.toString();
         cmdStr += "$";
-        serial.writeString(cmdStr);
+
+        let buf = pins.createBuffer(cmdStr.length + 5);
+        buf[0] = 0x55;
+        buf[1] = 0x55;
+        buf[2] = (cmdStr.length + 3) & 0xff;
+        buf[3] = 0x3F;//cmd type
+        buf[4] = 0x09;
+        for (let i = 0; i < cmdStr.length; i++) {
+            buf[5 + i] = cmdStr.charCodeAt(i);
+        }
+        serial.writeBuffer(buf);
     }
 
     function signal_dht11(pin: DigitalPin): void {
