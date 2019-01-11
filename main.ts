@@ -182,7 +182,7 @@ namespace iotbit {
                 let arg3Int: number = strToNumber(cmd.substr(5, 4));//时间
 
                 if (arg1Int != -1 && arg2Int != -1 && arg3Int != -1) {
-                    iotbit_setBusServo(busServoPort.port6, arg1Int, arg2Int, arg3Int);
+                    setServo(arg1Int, arg2Int, arg3Int);
                 }
             }
             else if (cmd.charAt(0).compare("D") == 0 && cmd.length == 6)//蜂鸣器
