@@ -166,7 +166,7 @@ namespace iotbit {
                 }
 
             }
-            else if (cmd.charAt(0).compare("B") == 0 && cmd.length == 3) {
+            else if (cmd.charAt(0).compare("B") == 0 && cmd.length == 4) {
                 let arg1Int: number = strToNumber(cmd.substr(1, 1));
                 let arg2Int: number = strToNumber(cmd.substr(2, 2));
 
