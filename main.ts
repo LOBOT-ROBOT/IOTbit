@@ -486,7 +486,7 @@ namespace iotbit {
         let pin2Clock = 0;
         if (fan_oriention == 1)
             fan_speed = -1 * fan_speed;
-        fan_speed = fan_speed * 1023 / 100;
+        fan_speed = Math.round(fan_speed * 1023 / 100);
         if (fan_speed > 0)//正转
         {
             pin1Clock = fan_speed;
