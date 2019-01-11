@@ -219,7 +219,7 @@ namespace iotbit {
             //k按键情况发送
             else if (cmd.charAt(0).compare("M") == 0 && cmd.length == 1)//查询方向
             {
-                control.raiseEvent(MESSAGE_HEAD, IOTCmdType.ULTRASONIC);
+                control.raiseEvent(MESSAGE_HEAD, IOTCmdType.ORIENTION);
             }
             else if (cmd.charAt(0).compare("N") == 0 && cmd.length == 1)//查询音量
             {
