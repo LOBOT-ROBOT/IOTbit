@@ -30,7 +30,7 @@ enum IOTRGBColors {
     //% block="Light 2"
     Light2 = 0x01,
     //% block="All"
-     All = 0x03
+     All = 0x02
 }
 
 
