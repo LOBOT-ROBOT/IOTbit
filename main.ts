@@ -210,7 +210,7 @@ namespace iotbit {
                     setServo(arg1Int, arg2Int, arg3Int);
                 }
             }
-            else if (cmd.charAt(0).compare("D") == 0 && cmd.length == 6)//蜂鸣器
+            else if (cmd.charAt(0).compare("D") == 0 && cmd.length == 3)//蜂鸣器
             {
                 let arg1Int: number = strToNumber(cmd.substr(1, 2));
                 if (arg1Int != -1)
