@@ -46,6 +46,27 @@ namespace iotbit {
         port6 = 0x06
 
     }
+
+    export enum MusicName {
+        //% block="dadadum"
+        Dadadum = 0x01,
+        //% block="little star"
+        Star = 0x02,      
+        //% block="ringtone"
+        Ring = 0x03,       
+        //% block="brithday"
+        Birth = 0x04,   
+        //% block="wedding"        
+        Wedding = 0x05,       
+        //% block="jump up"
+        JumpUp = 0x06,      
+        //% block="jump down"
+        JumpDown = 0x07,        
+        //% block="power up"
+        PowerUp = 0x08,      
+        //% block="power down"
+        PowerDown = 0x09             
+    }
      
 
     export enum touchKeyPort {
@@ -74,20 +95,24 @@ namespace iotbit {
         HUMI = 7,
         //% block="Light"
         LIGHT = 8,
-        //% block="Touch"
-        TOUCH = 9,
+        //% block="Enter touch"
+        TOUCH_IN = 9,
+        //% block="Quit touch"
+        TOUCH_OUT = 10,        
         //% block="Ultrasonic"
-        ULTRASONIC = 10,
+        ULTRASONIC = 11,
         //% block="Shake"
-        SHAKE = 11,
-        //% block="Key"
-        KEY = 12,
+        SHAKE = 12,
+        //% block="Enter key check"
+        KEY_IN = 13,
+        //% block="Quit key check"
+        KEY_OUT = 14,       
         //% block="Oriention"
-        ORIENTION = 13,
+        ORIENTION = 15,
         //% block="Sound"
-        SOUND = 14,
+        SOUND = 16,
         //% block="Battery level"
-        BAT = 15
+        BAT = 17
     }
 
     /**
@@ -137,7 +162,7 @@ namespace iotbit {
         let index = findIndexof(handleCmd, "$", 0);
         if (index != -1) {
             let cmd: string = handleCmd.substr(0, index);
-            if (cmd.charAt(0).compare("A") == 0) {
+            if (cmd.charAt(0).compare("A") == 0) {//彩灯颜色
                 if (cmd.length == 7)
                 {
                     let arg1Int: number = strToNumber(cmd.substr(1, 2));
@@ -166,7 +191,7 @@ namespace iotbit {
                 }
 
             }
-            else if (cmd.charAt(0).compare("B") == 0 && cmd.length == 4) {
+            else if (cmd.charAt(0).compare("B") == 0 && cmd.length == 4) {//风扇
                 let arg1Int: number = strToNumber(cmd.substr(1, 1));
                 let arg2Int: number = strToNumber(cmd.substr(2, 2));
 
@@ -176,7 +201,7 @@ namespace iotbit {
                     control.raiseEvent(MESSAGE_HEAD, IOTCmdType.FAN);
                 }
             }
-            else if (cmd.charAt(0).compare("C") == 0 && cmd.length == 9) {
+            else if (cmd.charAt(0).compare("C") == 0 && cmd.length == 9) {//舵机
                 let arg1Int: number = strToNumber(cmd.substr(1, 2));//编号
                 let arg2Int: number = strToNumber(cmd.substr(3, 2));//角度
                 let arg3Int: number = strToNumber(cmd.substr(5, 4));//时间
@@ -187,10 +212,9 @@ namespace iotbit {
             }
             else if (cmd.charAt(0).compare("D") == 0 && cmd.length == 6)//蜂鸣器
             {
-                let arg1Int: number = strToNumber(cmd.substr(1, 4));
-                let arg2Int: number = strToNumber(cmd.substr(5, 1));
-                if (arg1Int != -1 && arg2Int != -1)
-                    iotbit_playTone(arg1Int, arg2Int);
+                let arg1Int: number = strToNumber(cmd.substr(1, 2));
+                if (arg1Int != -1)
+                    iotbit_playTone(arg1Int);
             }
             else if (cmd.charAt(0).compare("E") == 0 && cmd.length == 3)//显示
             {
@@ -208,15 +232,30 @@ namespace iotbit {
             }
             else if (cmd.charAt(0).compare("H") == 0 && cmd.length == 1)//查询光线
             {
+                let arg1Int: number = strToNumber(cmd.substr(1, 1));
+                if(arg1Int == 2)
+                    control.raiseEvent(MESSAGE_HEAD, IOTCmdType.TOUCH_IN);
+                else if (arg1Int == 3)
+                    control.raiseEvent(MESSAGE_HEAD, IOTCmdType.TOUCH_OUT);
+            }
+            else if (cmd.charAt(0).compare("I") == 0 && cmd.length == 1)//H触摸感应
+            {
+
                 control.raiseEvent(MESSAGE_HEAD, IOTCmdType.LIGHT);
             }
-            //H触摸感应
             else if (cmd.charAt(0).compare("J") == 0 && cmd.length == 1)//查询超声波
             {
                 control.raiseEvent(MESSAGE_HEAD, IOTCmdType.ULTRASONIC);
             }
-            //J震动情况发送
-            //k按键情况发送
+            //K震动情况发送
+            else if (cmd.charAt(0).compare("L") == 0 && cmd.length == 1)//A按键
+            {
+                let arg1Int: number = strToNumber(cmd.substr(1, 1));
+                if(arg1Int == 2)
+                    control.raiseEvent(MESSAGE_HEAD, IOTCmdType.KEY_IN);
+                else if (arg1Int == 3)
+                    control.raiseEvent(MESSAGE_HEAD, IOTCmdType.KEY_OUT);
+            }   
             else if (cmd.charAt(0).compare("M") == 0 && cmd.length == 1)//查询方向
             {
                 control.raiseEvent(MESSAGE_HEAD, IOTCmdType.ORIENTION);
@@ -721,71 +760,52 @@ namespace iotbit {
     /**
      * Set Qdee play tone
      */
-    //% weight=64 blockId=iotbit_playTone block="IOTbit" play |tone %tone|and beats %rhythm"
-    export function iotbit_playTone(tone: number, rhythm: number) {
-        let toneNum: number = 0;
-        let beat: number;
-        switch (tone) {
-            case 1:
-                toneNum = 523;
+    //% weight=64 blockId=iotbit_playTone block="IOTbit" play song|num %num|"
+    export function iotbit_playTone(num: MusicName) {
+        switch (num)
+        {
+            case MusicName.Dadadum:
+                music.beginMelody(music.builtInMelody(Melodies.Dadadadum), MelodyOptions.Once);
                 break;
             
-            case 2:
-                toneNum = 587;
-                break;
+            case MusicName.Star:
+                music.beginMelody(littleStarMelody(), MelodyOptions.Once)
+                break;       
             
-            case 3:
-                toneNum = 659;
-                break;
+            case MusicName.Ring:
+                music.beginMelody(music.builtInMelody(Melodies.Ringtone), MelodyOptions.Once)
+                break;          
             
-            case 4:
-                toneNum = 698;
-                break;
+            case MusicName.Birth:
+                music.beginMelody(music.builtInMelody(Melodies.Birthday), MelodyOptions.Once)
+                break; 
             
-            case 5:
-                toneNum = 784;
-                break;
+            case MusicName.Wedding:
+                music.beginMelody(music.builtInMelody(Melodies.Wedding), MelodyOptions.Once)
+                break; 
             
-            case 6:
-                toneNum = 880;
-                break;
+            case MusicName.JumpUp:
+                music.beginMelody(music.builtInMelody(Melodies.JumpUp), MelodyOptions.Once)
+                break; 
             
-            case 7:
-                toneNum = 998;
-                break;
+            case MusicName.JumpDown:
+                music.beginMelody(music.builtInMelody(Melodies.JumpDown), MelodyOptions.Once)
+                break; 
             
-            case 8:
-                toneNum = 1047;
-                break;
+            case MusicName.PowerUp:
+                music.beginMelody(music.builtInMelody(Melodies.PowerUp), MelodyOptions.Once)
+                break; 
+            
+            case MusicName.PowerDown:
+                music.beginMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.Once)
+                break; 
         }
-
-        switch (rhythm) {
-            case 1:
-                beat = music.beat(BeatFraction.Eighth);
-                break;
-            
-            case 2:
-                beat = music.beat(BeatFraction.Quarter);
-                break;
-            
-            case 3:
-                beat = music.beat(BeatFraction.Half);
-                break;
-            
-            case 4:
-                beat = music.beat(BeatFraction.Whole);
-                break;
-            
-            case 5:
-                beat = music.beat(BeatFraction.Double);
-                break;
-        }
-
-        music.playTone(toneNum, beat);
 
     }
 
-
+     function littleStarMelody(): string[] {
+        return ["C4:4", "C4:4", "G4:4", "G4:4", "A4:4", "A4:4", "G4:4", "F4:4", "F4:4", "E4:4", "E4:4", "D4:4", "D4:4", "C4:4", "G4:4", "G4:4", "F4:4", "F4:4", "E4:4", "E4:4", "D4:4", "G4:4", "G4:4", "F4:4", "F4:4", "E4:4", "E4:4", "D4:4", "C4:4", "C4:4", "G4:4", "G4:4", "A4:4", "A4:4", "G4:4", "F4:4", "F4:4", "E4:4", "E4:4", "D4:4", "D4:4", "C4:4"];
+    }
 
     /**
      * Connect to the wifi
