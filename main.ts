@@ -232,23 +232,23 @@ namespace iotbit {
             }
             else if (cmd.charAt(0).compare("H") == 0 && cmd.length == 1)//查询光线
             {
+                control.raiseEvent(MESSAGE_HEAD, IOTCmdType.LIGHT);
+            }
+            else if (cmd.charAt(0).compare("I") == 0 && cmd.length == 2)//H触摸感应
+            {
                 let arg1Int: number = strToNumber(cmd.substr(1, 1));
                 if(arg1Int == 2)
                     control.raiseEvent(MESSAGE_HEAD, IOTCmdType.TOUCH_IN);
                 else if (arg1Int == 3)
                     control.raiseEvent(MESSAGE_HEAD, IOTCmdType.TOUCH_OUT);
-            }
-            else if (cmd.charAt(0).compare("I") == 0 && cmd.length == 1)//H触摸感应
-            {
-
-                control.raiseEvent(MESSAGE_HEAD, IOTCmdType.LIGHT);
+                
             }
             else if (cmd.charAt(0).compare("J") == 0 && cmd.length == 1)//查询超声波
             {
                 control.raiseEvent(MESSAGE_HEAD, IOTCmdType.ULTRASONIC);
             }
             //K震动情况发送
-            else if (cmd.charAt(0).compare("L") == 0 && cmd.length == 1)//A按键
+            else if (cmd.charAt(0).compare("L") == 0 && cmd.length == 2)//A按键
             {
                 let arg1Int: number = strToNumber(cmd.substr(1, 1));
                 if(arg1Int == 2)

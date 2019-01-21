@@ -94,7 +94,17 @@ namespace IOTRGBLight {
         }
 
         setPixelColorRGB(pixeloffset: number, r: number, g: number, b: number): void {
-            this.setBufferRGB(pixeloffset, r, g, b);
+            if (pixeloffset == this._length)//全部
+            {
+                for (let i = 0; i < this._length; i++)
+                {
+                    this.setBufferRGB(i, r, g, b); 
+                }
+            }
+            else
+            {
+                this.setBufferRGB(pixeloffset, r, g, b);
+            }
             this.show();
         }
 
