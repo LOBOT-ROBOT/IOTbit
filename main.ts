@@ -867,6 +867,9 @@ namespace iotbit {
             case IOTCmdType.TOUCH_IN:
                 cmdStr = "I";
                 break;
+            case IOTCmdType.TOUCH_OUT:
+                cmdStr = "I";
+                break;
             case IOTCmdType.ULTRASONIC:
                 cmdStr = "J";
                 break;
@@ -876,6 +879,9 @@ namespace iotbit {
             case IOTCmdType.KEY_IN:
                 cmdStr = "L";
                 break;
+            case IOTCmdType.KEY_OUT:
+                cmdStr = "L";
+                break;            
             case IOTCmdType.ORIENTION:
                 cmdStr = "M";
                 break;
