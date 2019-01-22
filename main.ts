@@ -218,8 +218,8 @@ namespace iotbit {
                 let arg1Int: number = strToNumber(cmd.substr(1, 2));
                 if (arg1Int != -1)
                 {
-                    iotbit_playTone(arg1Int);
                     control.raiseEvent(MESSAGE_HEAD, IOTCmdType.BUZZER);
+                    iotbit_playTone(arg1Int);
                 }    
             }
             else if (cmd.charAt(0).compare("E") == 0 && cmd.length == 3)//显示
@@ -227,8 +227,8 @@ namespace iotbit {
                 let arg1Int: number = strToNumber(cmd.substr(1, 2));
                 if (arg1Int != -1)
                 {
-                    iot_show_expressions(arg1Int);
                     control.raiseEvent(MESSAGE_HEAD, IOTCmdType.SHOW);
+                    iot_show_expressions(arg1Int);
                 }    
             }
             else if (cmd.charAt(0).compare("F") == 0 && cmd.length == 1)//查询温度
