@@ -188,6 +188,7 @@ namespace iotbit {
                     let arg3Int: number = strToNumber(cmd.substr(5, 2));
                     let arg4Int: number = strToNumber(cmd.substr(7, 2));
      
+                    control.raiseEvent(MESSAGE_HEAD, IOTCmdType.LED_COLOR);
                     if (arg1Int != -1 && arg2Int != -1 && arg3Int != -1 && arg4Int != -1)
                         iotbit_setPixelRGBSerial(arg1Int, arg2Int, arg3Int, arg4Int);    
                 }
@@ -216,13 +217,19 @@ namespace iotbit {
             {
                 let arg1Int: number = strToNumber(cmd.substr(1, 2));
                 if (arg1Int != -1)
+                {
                     iotbit_playTone(arg1Int);
+                    control.raiseEvent(MESSAGE_HEAD, IOTCmdType.BUZZER);
+                }    
             }
             else if (cmd.charAt(0).compare("E") == 0 && cmd.length == 3)//显示
             {
                 let arg1Int: number = strToNumber(cmd.substr(1, 2));
                 if (arg1Int != -1)
+                {
                     iot_show_expressions(arg1Int);
+                    control.raiseEvent(MESSAGE_HEAD, IOTCmdType.SHOW);
+                }    
             }
             else if (cmd.charAt(0).compare("F") == 0 && cmd.length == 1)//查询温度
             {
