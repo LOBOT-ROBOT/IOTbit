@@ -48,6 +48,8 @@ namespace iotbit {
     }
 
     export enum MusicName {
+        //% block = "stop"
+        Stop = 0x00,
         //% block="dadadum"
         Dadadum = 0x01,
         //% block="little star"
@@ -764,6 +766,9 @@ namespace iotbit {
     export function iotbit_playTone(num: MusicName) {
         switch (num)
         {
+            case MusicName.Stop:
+                music.playTone(262, music.beat(BeatFraction.Sixteenth));
+                break;
             case MusicName.Dadadum:
                 music.beginMelody(music.builtInMelody(Melodies.Dadadadum), MelodyOptions.Once);
                 break;
