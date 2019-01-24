@@ -1044,7 +1044,8 @@ namespace iotbit {
              serial.writeString("temp:");
              serial.writeNumber(temp);
              serial.writeLine("");
-             return temp;
+             temp *= 10;
+             return Math.round(temp);
          }
          else {
              let value2 = buf[2] * 256 + buf[3];
@@ -1052,7 +1053,8 @@ namespace iotbit {
              serial.writeString("humi:");
              serial.writeNumber(humi);
              serial.writeLine("");
-             return humi;
+             humi *= 10;
+             return Math.round(humi);
          }
      }
  
