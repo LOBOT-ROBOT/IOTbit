@@ -123,6 +123,7 @@ namespace iotbit {
     //% weight=100 blockId=iotbit_Init block="Initialize IOTbit"
     export function iotbit_Init() {
         iotbit_initRGBLight();
+        initTempHumiSensor();
         serial.redirect(
             SerialPin.P12,
             SerialPin.P8,
@@ -920,65 +921,150 @@ namespace iotbit {
         serial.writeBuffer(buf);
     }
 
-    function signal_dht11(pin: DigitalPin): void {
-        pins.digitalWritePin(pin, 0)
-        basic.pause(18)
-        pins.digitalWritePin(pin, 1)
-        basic.pause(40)
-        pins.setPull(pin, PinPullMode.PullUp);
+     //SHT31D_ErrorCode
+     const SHT3XD_NO_ERROR = 0;
 
-    }
-
-    function dht11_read(pin: DigitalPin): number {
-        signal_dht11(pin);
-
-        // Wait for response header to finish
-        while (pins.digitalReadPin(pin) == 0);
-        while (pins.digitalReadPin(pin) == 1);
-
-        let value = 0;
-        let counter = 0;
-
-        for (let i = 0; i <= 32 - 1; i++) {
-            while (pins.digitalReadPin(pin) == 0);
-            counter = 0
-            while (pins.digitalReadPin(pin) == 1) {
-                counter += 1;
-            }
-            if (counter > 4) {
-                value = value + (1 << (31 - i));
-            }
-        }
-        return value;
-    }
-     
-    /**
-     * Get sensor temperature and humidity
-     */
-    //% weight=58 blockId="iotbit_gettemperature" block="IOTbit|port %port|get %select"
-    export function iotbit_gettemperature(port: TempSensor, select: Temp_humi): number {
-        let pin = DigitalPin.P2;
-        switch (port)
-        {
-            case TempSensor.port1:
-                pin = DigitalPin.P2;
-                break;
-            
-            case TempSensor.port2:
-                pin = DigitalPin.P14;
-                break;
-            
-            case TempSensor.port3:
-                pin = DigitalPin.P16;
-                break;
-        }
-        let value = dht11_read(pin)
-        if (select == Temp_humi.Temperature) {
-            return (value & 0x0000ff00) >> 8;
-        }
-        else {
-            return value >> 24
-        }
-    }
+     const SHT3XD_CRC_ERROR = -101;
+     const SHT3XD_TIMEOUT_ERROR = -102;
+ 
+     const SHT3XD_PARAM_WRONG_MODE = -501;
+     const SHT3XD_PARAM_WRONG_REPEATABILITY = -502;
+     const SHT3XD_PARAM_WRONG_FREQUENCY = -503;
+     const SHT3XD_PARAM_WRONG_ALERT = -504;
+ 
+     // Wire I2C translated error codes
+     const SHT3XD_WIRE_I2C_DATA_TOO_LOG = -10;
+     const SHT3XD_WIRE_I2C_RECEIVED_NACK_ON_ADDRESS = -20;
+     const SHT3XD_WIRE_I2C_RECEIVED_NACK_ON_DATA = -30;
+     const SHT3XD_WIRE_I2C_UNKNOW_ERROR = -40;
+ 
+     //SHT31D_Commands
+     const SHT3XD_CMD_READ_SERIAL_NUMBER = 0x3780;
+ 
+     const SHT3XD_CMD_READ_STATUS = 0xF32D;
+     const SHT3XD_CMD_CLEAR_STATUS = 0x3041;
+ 
+     const SHT3XD_CMD_HEATER_ENABLE = 0x306D;
+     const SHT3XD_CMD_HEATER_DISABLE = 0x3066;
+ 
+     const SHT3XD_CMD_SOFT_RESET = 0x30A2;
+ 
+     const SHT3XD_CMD_CLOCK_STRETCH_H = 0x2C06;
+     const SHT3XD_CMD_CLOCK_STRETCH_M = 0x2C0D;
+     const SHT3XD_CMD_CLOCK_STRETCH_L = 0x2C10;
+ 
+     const SHT3XD_CMD_POLLING_H = 0x2400;
+     const SHT3XD_CMD_POLLING_M = 0x240B;
+     const SHT3XD_CMD_POLLING_L = 0x2416;
+ 
+     const SHT3XD_CMD_ART = 0x2B32;
+ 
+     const SHT3XD_CMD_PERIODIC_HALF_H = 0x2032;
+     const SHT3XD_CMD_PERIODIC_HALF_M = 0x2024;
+     const SHT3XD_CMD_PERIODIC_HALF_L = 0x202F;
+     const SHT3XD_CMD_PERIODIC_1_H = 0x2130;
+     const SHT3XD_CMD_PERIODIC_1_M = 0x2126;
+     const SHT3XD_CMD_PERIODIC_1_L = 0x212D;
+     const SHT3XD_CMD_PERIODIC_2_H = 0x2236;
+     const SHT3XD_CMD_PERIODIC_2_M = 0x2220;
+     const SHT3XD_CMD_PERIODIC_2_L = 0x222B;
+     const SHT3XD_CMD_PERIODIC_4_H = 0x2334;
+     const SHT3XD_CMD_PERIODIC_4_M = 0x2322;
+     const SHT3XD_CMD_PERIODIC_4_L = 0x2329;
+     const SHT3XD_CMD_PERIODIC_10_H = 0x2737;
+     const SHT3XD_CMD_PERIODIC_10_M = 0x2721;
+     const SHT3XD_CMD_PERIODIC_10_L = 0x272A;
+ 
+     const SHT3XD_CMD_FETCH_DATA = 0xE000;
+     const SHT3XD_CMD_STOP_PERIODIC = 0x3093;
+ 
+     const SHT3XD_CMD_READ_ALR_LIMIT_LS = 0xE102;
+     const SHT3XD_CMD_READ_ALR_LIMIT_LC = 0xE109;
+     const SHT3XD_CMD_READ_ALR_LIMIT_HS = 0xE11F;
+     const SHT3XD_CMD_READ_ALR_LIMIT_HC = 0xE114;
+ 
+     const SHT3XD_CMD_WRITE_ALR_LIMIT_HS = 0x611D;
+     const SHT3XD_CMD_WRITE_ALR_LIMIT_HC = 0x6116;
+     const SHT3XD_CMD_WRITE_ALR_LIMIT_LC = 0x610B;
+     const SHT3XD_CMD_WRITE_ALR_LIMIT_LS = 0x6100;
+ 
+     const SHT3XD_CMD_NO_SLEEP = 0x303E;
+ 
+ 
+     const SHT3XD_ADDRESS = 0x44;
+ 
+     let errocode = SHT3XD_NO_ERROR;
+ 
+     function i2cwrite(value: number): number {
+         let buf = pins.createBuffer(2);
+         buf[0] = value >> 8;
+         buf[1] = value & 0xff;
+         let rvalue = pins.i2cWriteBuffer(SHT3XD_ADDRESS, buf);
+         // serial.writeString("writeback:");
+         // serial.writeNumber(rvalue);
+         // serial.writeLine("");
+         return rvalue;
+     }
+ 
+     function i2cread(): Buffer {
+         let val = pins.i2cReadBuffer(SHT3XD_ADDRESS, 4);
+         return val;
+     }
+ 
+     function initTempHumiSensor(): boolean {
+         if (i2cwrite(SHT3XD_CMD_READ_SERIAL_NUMBER) != SHT3XD_NO_ERROR) {
+             // serial.writeLine("111111")
+             return false;
+         }
+ 
+         if (i2cwrite(SHT3XD_CMD_PERIODIC_10_H) != SHT3XD_NO_ERROR) {
+             // serial.writeLine("222222")
+             return false;
+         }
+ 
+         return true;
+     }
+ 
+     function readTempHumi(select: Temp_humi): number {
+         if (i2cwrite(SHT3XD_CMD_FETCH_DATA) != SHT3XD_NO_ERROR) {
+             // serial.writeLine("3333333")
+             return 0;
+         }
+         let buf = i2cread();
+         if (buf.length != 4) {
+             // serial.writeLine("444444")
+             return 0;
+         }
+         // serial.writeString("buf[0]:");
+         // serial.writeNumber(buf[0]);
+         // serial.writeLine("");
+         // serial.writeString("buf[1]:");
+         // serial.writeNumber(buf[1]);
+         // serial.writeLine("");
+         if (select == Temp_humi.Temperature) {
+             let value1 = buf[0] * 256 + buf[1];
+             let temp = 175.0 * value1 / 65535.0 - 45.0;
+             // serial.writeString("temp:");
+             // serial.writeNumber(temp);
+             // serial.writeLine("");
+             return temp;
+         }
+         else {
+             let value2 = buf[2] * 256 + buf[3];
+             let humi = 100.0 * value2 / 65535.0;
+             // serial.writeString("humi:");
+             // serial.writeNumber(humi);
+             // serial.writeLine("");
+             return humi;
+         }
+     }
+ 
+     /**
+      * Get sensor temperature and humidity
+      */
+     //% weight=58 blockId="iotbit_gettemperature" block="IOTbit|port %port|get %select"
+     export function iotbit_gettemperature(port: TempSensor, select: Temp_humi): number {
+         return readTempHumi(select);
+     }
      
 }
