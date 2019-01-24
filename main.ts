@@ -24,13 +24,9 @@ namespace iotbit {
         Humidity = 0x02
     }
 
-    export enum TempSensor {
-        //% block="Port 1"
-        port1 = 0x01,
-        //% block="Port 2"
-        port2 = 0x02,      
-        //% block="Port 3"
-        port3 = 0x03           
+    export enum TempSensor { 
+        //% block="Port 4"
+        port4 = 0x04           
     }
 
     export enum ultrasonicPort {
