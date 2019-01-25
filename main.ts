@@ -1048,7 +1048,7 @@ namespace iotbit {
              return Math.round(temp);
          }
          else {
-             let value2 = buf[2] * 256 + buf[3];
+             let value2 = buf[3] * 256 + buf[2];
              let humi = 100.0 * value2 / 65535.0;
              serial.writeString("humi:");
              serial.writeNumber(humi);
