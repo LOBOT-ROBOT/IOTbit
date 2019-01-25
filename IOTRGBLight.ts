@@ -94,18 +94,29 @@ namespace IOTRGBLight {
         }
 
         setPixelColorRGB(pixeloffset: number, r: number, g: number, b: number): void {
-            if (pixeloffset == this._length)//全部
-            {
-                for (let i = 0; i < this._length; i++)
-                {
-                    this.setBufferRGB(i, r, g, b); 
-                }
-            }
-            else
-            {
-                this.setBufferRGB(pixeloffset, r, g, b);
+
+            for (let i = 0; i < this._length; i++) {
+                this.setPixelRGBValue(i, r, g, b);
             }
             this.show();
+        }
+
+
+        private setPixelRGBValue(pixeloffset: number, r: number, g: number, b: number): void {
+            let stride = this._mode === IOTRGBPixelMode.RGBW ? 4 : 3;
+            pixeloffset = (pixeloffset + this.start) * stride;
+
+            let red = unpackR(r);
+            let green = unpackG(g);
+            let blue = unpackB(b);
+
+            let br = this.brightness;
+            if (br < 255) {
+                red = (red * br) >> 8;
+                green = (green * br) >> 8;
+                blue = (blue * br) >> 8;
+            }
+            this.setBufferRGB(pixeloffset, red, green, blue)
         }
 
         private setPixelRGB(pixeloffset: number, rgb: IOTRGBColors): void {
