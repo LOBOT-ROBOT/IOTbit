@@ -106,17 +106,13 @@ namespace IOTRGBLight {
             let stride = this._mode === IOTRGBPixelMode.RGBW ? 4 : 3;
             pixeloffset = (pixeloffset + this.start) * stride;
 
-            let red = unpackR(r);
-            let green = unpackG(g);
-            let blue = unpackB(b);
-
             let br = this.brightness;
             if (br < 255) {
-                red = (red * br) >> 8;
-                green = (green * br) >> 8;
-                blue = (blue * br) >> 8;
+                r = (r * br) >> 8;
+                g = (g * br) >> 8;
+                b = (b * br) >> 8;
             }
-            this.setBufferRGB(pixeloffset, red, green, blue)
+            this.setBufferRGB(pixeloffset, r, g, b)
         }
 
         private setPixelRGB(pixeloffset: number, rgb: IOTRGBColors): void {

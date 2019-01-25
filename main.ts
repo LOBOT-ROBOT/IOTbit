@@ -119,7 +119,6 @@ namespace iotbit {
     //% weight=100 blockId=iotbit_Init block="Initialize IOTbit"
     export function iotbit_Init() {
         iotbit_initRGBLight();
-        
         serial.redirect(
             SerialPin.P12,
             SerialPin.P8,
@@ -128,9 +127,9 @@ namespace iotbit {
         basic.forever(() => {
             getHandleCmd();
         });
-
-        basic.pause(2000);
         initTempHumiSensor();
+        basic.pause(2000);
+        
     }
 
     let handleCmd: string = "";
