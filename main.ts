@@ -224,7 +224,7 @@ namespace iotbit {
                 let arg1Int: number = strToNumber(cmd.substr(1, 2));
                 if (arg1Int != -1)
                 {
-                    control.raiseEvent(MESSAGE_HEAD, IOTCmdType.SHOW);
+                    iotbit_sendSensorData(IOTCmdType.SHOW,arg1Int);
                     iot_show_expressions(arg1Int);
                 }    
             }
@@ -1040,18 +1040,18 @@ namespace iotbit {
          if (select == Temp_humi.Temperature) {
              let value1 = buf[0] * 256 + buf[1];
              let temp = 175.0 * value1 / 65535.0 - 45.0;
-             serial.writeString("temp:");
-             serial.writeNumber(temp);
-             serial.writeLine("");
+            //  serial.writeString("temp:");
+            //  serial.writeNumber(temp);
+            //  serial.writeLine("");
              temp *= 10;
              return Math.round(temp);
          }
          else {
              let value2 = buf[3] * 256 + buf[2];
              let humi = 100.0 * value2 / 65535.0;
-             serial.writeString("humi:");
-             serial.writeNumber(humi);
-             serial.writeLine("");
+            //  serial.writeString("humi:");
+            //  serial.writeNumber(humi);
+            //  serial.writeLine("");
              humi *= 10;
              return Math.round(humi);
          }
