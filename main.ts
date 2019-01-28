@@ -215,7 +215,7 @@ namespace iotbit {
                 let arg1Int: number = strToNumber(cmd.substr(1, 2));
                 if (arg1Int != -1)
                 {
-                    control.raiseEvent(MESSAGE_HEAD, IOTCmdType.BUZZER);
+                    iotbit_sendSensorData(IOTCmdType.BUZZER,arg1Int);
                     iotbit_playTone(arg1Int);
                 }    
             }
