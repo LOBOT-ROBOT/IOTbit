@@ -110,7 +110,9 @@ namespace iotbit {
         //% block="Sound"
         SOUND = 16,
         //% block="Battery level"
-        BAT = 17
+        BAT = 17,
+        //% block="APP start"
+        START = 18
     }
 
     /**
@@ -161,7 +163,11 @@ namespace iotbit {
         let index = findIndexof(handleCmd, "$", 0);
         if (index != -1) {
             let cmd: string = handleCmd.substr(0, index);
-            if (cmd.charAt(0).compare("A") == 0) {//彩灯颜色
+            if (cmd.compare("START") == 0)
+            {
+                control.raiseEvent(MESSAGE_HEAD, IOTCmdType.START);
+            }
+            else if (cmd.charAt(0).compare("A") == 0) {//彩灯颜色
                 if (cmd.length == 7)
                 {
                     let arg1Int: number = strToNumber(cmd.substr(1, 2));
@@ -257,9 +263,9 @@ namespace iotbit {
             else if (cmd.charAt(0).compare("L") == 0 && cmd.length == 2)//A按键
             {
                 let arg1Int: number = strToNumber(cmd.substr(1, 1));
-                if(arg1Int == 2)
+                if(arg1Int == 3)
                     control.raiseEvent(MESSAGE_HEAD, IOTCmdType.KEY_IN);
-                else if (arg1Int == 3)
+                else if (arg1Int == 4)
                     control.raiseEvent(MESSAGE_HEAD, IOTCmdType.KEY_OUT);
             }   
             else if (cmd.charAt(0).compare("M") == 0 && cmd.length == 1)//查询方向
