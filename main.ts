@@ -920,6 +920,9 @@ namespace iotbit {
             case IOTCmdType.BAT:
                 cmdStr = "O";
                 break;
+            case IOTCmdType.SOIL_HUMI:
+                cmdStr = "P";
+                break;
 
         }
         cmdStr += data.toString();
