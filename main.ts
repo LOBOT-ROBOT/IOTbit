@@ -76,6 +76,14 @@ namespace iotbit {
         port3 = 0x03
     }
 
+
+    export enum soilPort {
+        //% block="Port 1"
+        port1 = 0x01,
+        //% block="Port 3"
+        port3 = 0x03
+    }
+
     export enum IOTCmdType {
         //% block="led color"
         LED_COLOR = 1,
@@ -1069,6 +1077,45 @@ namespace iotbit {
      //% weight=58 blockId="iotbit_gettemperature" block="IOTbit|port %port|get %select"
      export function iotbit_gettemperature(port: TempSensor, select: Temp_humi): number {
          return readTempHumi(select);
-     }
+    }
+    
+
+    /**
+     * Get soil humidity
+     */
+    //% weight=56 blockId="iotbit_getsoilhumi" block="IOTbit|port %port|get soil humidity"
+    export function iotbit_getsoilhumi(port: soilPort): number
+    {
+        let value: number = 0;
+        if (port == soilPort.port1)
+        {
+            value = pins.analogReadPin(AnalogPin.P1);
+            value = mapRGB(value, 0, 1023, 0, 100);
+        }
+        else if (port == soilPort.port3)
+        {
+            value = P14_ad;
+            value = mapRGB(value, 0, 255, 0, 100);
+        }
+        return Math.round(value);
+    }
      
+    /**
+     * Get light level
+     */
+    //% weight=56 blockId="iotbit_getlightlevel" block="IOTbit|port %port|get light level"
+    export function iotbit_getlightlevel(port: soilPort): number
+    {
+        let value: number = 0;
+        if (port == soilPort.port1)
+        {
+            value = pins.analogReadPin(AnalogPin.P1);
+            value = mapRGB(value, 0, 1023, 0, 255);
+        }
+        else if (port == soilPort.port3)
+        {
+            value = P14_ad;
+        }
+        return Math.round(255 - value);
+    }
 }
