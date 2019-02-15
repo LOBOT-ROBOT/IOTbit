@@ -119,8 +119,10 @@ namespace iotbit {
         SOUND = 16,
         //% block="Battery level"
         BAT = 17,
+        //% block="Soil humidity"
+        SOIL_HUMI = 18,       
         //% block="APP start"
-        START = 18
+        START = 19
     }
 
     /**
@@ -284,6 +286,10 @@ namespace iotbit {
             {
                 control.raiseEvent(MESSAGE_HEAD, IOTCmdType.SOUND);
             }
+            else if (cmd.charAt(0).compare("P") == 0 && cmd.length == 1)//查询土壤湿度
+            {
+                control.raiseEvent(MESSAGE_HEAD, IOTCmdType.SOIL_HUMI);
+            }            
         }
         handleCmd = "";
     }
