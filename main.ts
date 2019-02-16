@@ -79,9 +79,7 @@ namespace iotbit {
 
     export enum soilPort {
         //% block="Port 1"
-        port1 = 0x01,
-        //% block="Port 3"
-        port3 = 0x03
+        port1 = 0x01
     }
 
     export enum IOTCmdType {
