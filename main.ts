@@ -223,7 +223,7 @@ namespace iotbit {
                 let arg3Int: number = strToNumber(cmd.substr(5, 4));//时间
 
                 if (arg1Int != -1 && arg2Int != -1 && arg3Int != -1) {
-                    setServo(arg1Int, arg2Int, arg3Int);
+                    iotbit_setServo(arg1Int, arg2Int, arg3Int);
                 }
             }
             else if (cmd.charAt(0).compare("D") == 0 && cmd.length == 3)//蜂鸣器
