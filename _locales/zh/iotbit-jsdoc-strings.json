@@ -1,10 +1,12 @@
 {
 	"iotbit.iotbit_Init":"初始化IOTbit",
-	"iotbit.qdee_setBusServo":"设置总线舵机运转角度",
+	"iotbit.iotbit_setBusServo":"设置总线舵机运转角度",
 	"iotbit.iotbit_setBusServoNum":"设置总线舵机的编号",
 	"iotbit.iotbit_readAngle":"发送读总线舵机角度命令",
 	"iotbit.onIOTbit_getAngle":"获取到总线舵机角度后执行",
 	"iotbit.onIOTbitGetCmd":"当获取到IOT远程命令时执行",
+	"iotbit.iotbit_getServosAngle":"获取总线舵机角度",
+	"iotbit.iotbit_setServo":"设置PWM舵机角度，编号范围1~6,角度范围0~180",
 	"iotbit.iotbit_getSoundVolume":"音量值",
 	"iotbit.iotbit_getBatVoltage":"电量值",
 	"iotbit.iotbit_fan_speed":"设置风扇的转向和转速",
@@ -20,5 +22,7 @@
 	"iotbit.iotbit_playTone":"IOTbit根据音调和节拍播放声音",
 	"iotbit.iotbit_connectWifi":"配置连接到WIFI模块连入局域网",
 	"iotbit.iotbit_sendSensorData":"发送传感器数据",    
-	"iotbit.iotbit_gettemperature":"IOTbit获取温度和湿度"
+	"iotbit.iotbit_gettemperature":"IOTbit温度和湿度",
+	"iotbit.iotbit_getsoilhumi":"IOTbit土壤湿度",
+	"iotbit.iotbit_getlightlevel":"IOTbit光线强度"
 }

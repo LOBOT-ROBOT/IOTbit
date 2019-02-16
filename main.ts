@@ -452,8 +452,8 @@ namespace iotbit {
     /**
      *  Get servos angle
      */
-    //% weight=88 blockId=getServosAngle block="Get|%servo|angle(-120~120)"
-    export function getServosAngle(servo: Servos): number {
+    //% weight=88 blockId=iotbit_getServosAngle block="Get|%servo|angle(-120~120)"
+    export function iotbit_getServosAngle(servo: Servos): number {
         if (servo == Servos.Servo1) {
             return servo1Angle;
         }
@@ -466,11 +466,11 @@ namespace iotbit {
 
 
     /**
-    * Set the angle of servo 1 to 8, range of 0~180 degree
+    * Set the angle of servo 1 to 6, range of 0~180 degree
     */
-    //% weight=87 blockId=setServo block="Set pwm servo|index %index|angle(0~180) %angle|duration %duration"
+    //% weight=87 blockId=iotbit_setServo block="Set pwm servo|index %index|angle(0~180) %angle|duration %duration"
     //% angle.min=0 angle.max=180
-    export function setServo(index: number, angle: number, duration: number) {
+    export function iotbit_setServo(index: number, angle: number, duration: number) {
         if (angle > 180 || angle < 0) {
             return;
         }
@@ -786,7 +786,7 @@ namespace iotbit {
     /**
      * Set Qdee play tone
      */
-    //% weight=64 blockId=iotbit_playTone block="IOTbit" play song|num %num|"
+    //% weight=64 blockId=iotbit_playTone block="IOTbit play song|num %num|"
     export function iotbit_playTone(num: MusicName) {
         switch (num)
         {
