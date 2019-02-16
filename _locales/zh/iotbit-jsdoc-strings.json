@@ -22,7 +22,7 @@
 	"iotbit.iotbit_playTone":"IOTbit根据音调和节拍播放声音",
 	"iotbit.iotbit_connectWifi":"配置连接到WIFI模块连入局域网",
 	"iotbit.iotbit_sendSensorData":"发送传感器数据",    
-	"iotbit.iotbit_gettemperature":"IOTbit温度和湿度",
+	"iotbit.iotbit_gettemperature":"IOTbit获取温度和湿度",
 	"iotbit.iotbit_getsoilhumi":"IOTbit土壤湿度",
 	"iotbit.iotbit_getlightlevel":"IOTbit光线强度"
 }

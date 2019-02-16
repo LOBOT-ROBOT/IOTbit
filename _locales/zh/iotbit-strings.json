@@ -76,11 +76,9 @@
 	"IOTLights.Light1|block":"彩灯灯1",
 	"IOTLights.Light2|block":"彩灯灯2",
 	"IOTLights.All|block":"全部",
-	"TempSensor.port1|block":"接口1",
-	"TempSensor.port2|block":"接口2",
-	"TempSensor.port3|block":"接口3",
+	"TempSensor.port4|block":"接口4",
 	"Servos.Servo1|block":"舵机1",
 	"Servos.Servo2|block":"舵机2",
-	"iotbit.iotbit_getsoilhumi|block":"IOTbit|接口 %port|土壤湿度",
-	"iotbit.iotbit_getlightlevel|block":"IOTbit|接口 %port|光线强度"
+	"iotbit.iotbit_getsoilhumi|block":"IOTbit|接口 %port|获取土壤湿度",
+	"iotbit.iotbit_getlightlevel|block":"IOTbit|接口 %port|光线等级"
 }
