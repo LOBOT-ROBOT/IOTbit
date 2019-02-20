@@ -1,6 +1,6 @@
 # iotbit
 
-Extension for Lobot IOTbit Microbot block
+Extension for Lobot IOTbit Microbit block
 
 ## License
 
